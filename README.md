@@ -23,6 +23,8 @@
 
 <p align="center"><b>An automated pipeline that turns unlabelled phone videos of a person doing a task into robot policies trained in simulation.</b></p>
 
+<p align="center">My submission for the <b>Humanoid Robot Learning internship challenge</b>, October 2026.</p>
+
 <p align="center"><b>Live write-up:</b> I am continuing this project after the challenge deadline, and the latest version of this write-up lives at <a href="https://ar3o.github.io/clean-tables/">ar3o.github.io/clean-tables</a>.</p>
 
 ## Why I built this
