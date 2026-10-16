@@ -1,0 +1,38 @@
+# Physics twins: one Isaac Sim scene per episode (cleantables.twin).
+# Every value here is the setting used for the published twins.
+
+plate:
+  depth_bin: 0.03              # log-depth histogram bin (3 %)
+  min_support_frames: 6        # a static depth cluster needs at least this many frames ...
+  min_support_frac: 0.08       # ... and this fraction of the valid samples of the pixel
+  min_colour_samples: 3        # fewer depth-agreeing frames than this: the pixel is inpainted
+  max_frames: 300              # long videos are subsampled to this many keyframes
+  mask_dilation_px: 3          # object / hand masks are grown by this much before they are cut
+  min_static_depth_m: 0.6      # nothing static is this close to the phone (the tripod stands behind the person)
+  person_cloud_frames: 150     # keyframes pooled for the body point cloud that places the robot shoulders
+  person_inpaint_radius: 9
+
+person_mask:
+  prompts: [person, foot, shoe]  # "leg" also fires on the table legs
+  min_prob: 0.25
+  dilation_px: 8
+
+scene:
+  start_window_frames: 15      # 1.5 s at 10 fps: objects sighted here are on the table at the start
+  background_emissive: 600.0   # emissive gain of the background plate, calibrated against the real frame under RTX
+  table_drop_m: 0.255          # arm base below the table top (Lift task convention)
+  base_gap_m: 0.15             # arm base behind the table edge
+  box_mass_kg: 3.0             # boxes and the toolbox lid are heavy on purpose: stacks stay stable
+  box_friction: [0.9, 0.8]
+  container_mass_kg: 2.5
+
+render:
+  settle_steps: 30             # 30 Hz control steps of PhysX before the stills (1 s)
+  dome_intensity: 220.0
+  key_intensity: 350.0
+
+imagine:
+  move_s: 2.0                  # seconds per imagined move
+  pause_s: 1.0                 # plan shown before each move
+  fps: 15
+  samples: 8                   # imagined paths per ensemble member

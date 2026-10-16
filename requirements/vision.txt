@@ -1,0 +1,15 @@
+# Perception + world model environment.
+torch==2.11.0
+torchvision
+transformers==5.5.4
+accelerate==1.15.0
+numpy>=2.0,<2.3
+scipy
+opencv-python-headless
+imageio[ffmpeg]
+pillow
+trimesh
+pyyaml
+tqdm
+google-genai
+# MoGe-3 (metric depth) is installed from source, see docs/installation.md

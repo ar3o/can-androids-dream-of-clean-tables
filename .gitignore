@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Data, weights and run outputs (large; never commit)
+data/
+runs/
+logs/
+outputs/
+videos/
+checkpoints/
+weights/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.npz
+*.npy
+*.h5
+*.hdf5
+
+# Raw phone footage and renders (curated media lives in assets/media/)
+*.mp4
+*.mov
+*.MOV
+!assets/media/*.mp4
+
+# Generated meshes and scenes
+*.usd
+*.usda
+*.usdc
+*.glb
+*.obj
+*.ply
+
+# Third-party checkouts
+third_party/
+external/
+
+# Agent / scratch
+reports/agents/
+scratch/
+tmp/

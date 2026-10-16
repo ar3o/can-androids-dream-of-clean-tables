@@ -1,0 +1,26 @@
+# Episode segmentation (cleantables.episodes).
+
+segment:
+  model: gemini-2.5-flash        # any current Gemini Flash model
+  sample_fps: 5                  # frames per second the model sees
+  poll_s: 5                      # wait between checks while an uploaded video is being processed
+
+prepare:
+  margin_s: 1.0                  # added before start_s and after end_s; the labelled times are kept as core_start_s / core_end_s
+  work_fps: 10.0                 # the clipped end is the time of the last work frame (cleantables.perception.frames)
+
+  # Videos whose episodes are used. Every episode of a listed video is kept and gets the task type of
+  # the first keyword found in its instruction (lower case).
+  videos: [IMG_2516, IMG_2533, IMG_2534, IMG_2535, IMG_2536, IMG_2537, IMG_2538, IMG_2539, IMG_2542, IMG_2544,
+           IMG_2546, IMG_2547, IMG_2548, IMG_2549, IMG_2550, IMG_2551, IMG_2552, IMG_2553, IMG_2554, IMG_2555]
+  task_keywords:
+    fruit: fruit
+    tools: tool
+    stack_boxes: stack
+
+  # Recorded but not used in this release.
+  excluded_videos:
+    IMG_2511: no task found
+    IMG_2513: full-table clean-up
+    IMG_2514: full-table clean-up
+    IMG_2518: bowls and mugs

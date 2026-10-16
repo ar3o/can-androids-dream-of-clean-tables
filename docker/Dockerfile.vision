@@ -1,0 +1,23 @@
+# Perception and world-model image: PyTorch, Transformers, SAM 3, MoGe-3 and this package.
+# Build:  docker build -f docker/Dockerfile.vision -t cleantables-vision .
+# Run:    docker run --gpus all -it --rm -e GEMINI_API_KEY -e HF_TOKEN -v $PWD/data:/workspace/cleantables/data \
+#             -v $PWD/runs:/workspace/cleantables/runs cleantables-vision
+FROM nvcr.io/nvidia/pytorch:25.09-py3
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends git ffmpeg && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+RUN git clone https://github.com/facebookresearch/sam3.git && pip install --no-cache-dir -e sam3 \
+    && git clone https://github.com/microsoft/MoGe.git && pip install --no-cache-dir -e MoGe
+
+WORKDIR /workspace/cleantables
+COPY requirements/vision.txt requirements/vision.txt
+RUN pip install --no-cache-dir -r requirements/vision.txt
+COPY pyproject.toml README.md ./
+COPY cleantables cleantables
+COPY configs configs
+COPY scripts scripts
+RUN pip install --no-cache-dir --no-deps -e .
+
+ENTRYPOINT ["/bin/bash"]

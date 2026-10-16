@@ -1,0 +1,27 @@
+# Simulation image: Isaac Sim 6.1, Isaac Lab 3 and this package.
+# Build:  docker build -f docker/Dockerfile.sim -t cleantables-sim .
+# Run:    docker run --gpus all -it --rm -v $PWD/data:/workspace/cleantables/data -v $PWD/runs:/workspace/cleantables/runs \
+#             -v $PWD/checkpoints:/workspace/cleantables/checkpoints cleantables-sim
+ARG ISAACSIM_IMAGE=nvcr.io/nvidia/isaac-sim:6.1.0
+FROM ${ISAACSIM_IMAGE}
+
+ENV ACCEPT_EULA=Y PRIVACY_CONSENT=Y OMNI_KIT_ACCEPT_EULA=YES DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends git ffmpeg && rm -rf /var/lib/apt/lists/*
+
+# Isaac Lab, pinned to the commit the results were produced with
+ARG ISAACLAB_COMMIT=9eacda9ddc919c81d0d35a974ee081b6a607b865
+RUN git clone https://github.com/isaac-sim/IsaacLab.git /opt/IsaacLab \
+    && cd /opt/IsaacLab && git checkout ${ISAACLAB_COMMIT} \
+    && ln -s /isaac-sim _isaac_sim && ./isaaclab.sh --install none
+ENV ISAACLAB_ROOT=/opt/IsaacLab
+
+WORKDIR /workspace/cleantables
+COPY requirements/sim.txt requirements/sim.txt
+RUN /isaac-sim/python.sh -m pip install --no-cache-dir -r requirements/sim.txt
+COPY pyproject.toml README.md ./
+COPY cleantables cleantables
+COPY configs configs
+COPY scripts scripts
+RUN /isaac-sim/python.sh -m pip install --no-cache-dir --no-deps -e .
+
+ENTRYPOINT ["/bin/bash"]

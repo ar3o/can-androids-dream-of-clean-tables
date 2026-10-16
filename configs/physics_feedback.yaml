@@ -1,0 +1,18 @@
+# Physics-feedback fine-tuning (cleantables.worldmodel.physics_feedback).
+init_run: imitation
+out_run: physics_feedback
+rounds: [600, 1500]           # two consecutive rounds; each restarts the optimiser from the previous weights
+seeds: [0, 1, 2]
+scenes_per_step: 12           # twin layouts imagined per step
+samples_per_scene: 16         # imagined carries per layout
+keep_fraction: 0.25           # train towards the least-penetrating quarter
+measured_layout_share: 0.2    # otherwise a random layout of the in-scope objects
+lr: 1.0e-4
+weight_decay: 0.01
+w_phys: 1.0
+seed: 0
+
+# scoring on the held-out twins
+score_layouts: 8
+score_samples: 8
+score_seed: 1

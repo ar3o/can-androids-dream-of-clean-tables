@@ -1,0 +1,39 @@
+# Bimanual RL stage (cleantables.rl). Every field defaults to the final training run; see cleantables/rl/config.py.
+env:
+  max_seconds: 30.0
+  class_vocab: [fruit, tool]
+  shuffle_prob: 0.5                 # share of resets with the in-scope items placed anywhere within reach
+  object_friction_dr: [0.8, 1.2]
+  heavy_box_mass: [2.5, 4.0]        # kg
+  w_arm_contact: 0.01
+  w_proximity: 0.005
+  teacher_run: physics_feedback     # runs/worldmodel/<run>/final_seed{0,1,2}.pt
+  teacher_seeds: [0, 1, 2]
+  replan_every: 90                  # control steps (3 s)
+
+ppo:
+  lr: 3.0e-4
+  lr_actor: 3.0e-5
+  init_std: 0.3
+  shape_w: 10.0
+  kl_prior: 1.0
+  kl_prior_final: 0.05
+  kl_decay_iters: 300
+  warmup_iters: 15
+  ent_pointer: 0.05
+  ent_pointer_final: 0.01
+  pointer_min_entropy: 0.3
+  ckpt_every: 20
+
+rotation:
+  ranks: 2
+  envs_per_rank: 448                # 640 reaches the PhysX limit of 64K materials with per-env friction randomisation
+  block_iters: 60
+  # tools and fruit twins interleaved; the held-out twins never appear here
+  train_twins: [IMG_2533_t01, IMG_2516_t01, IMG_2534_t01, IMG_2516_t02, IMG_2535_t01, IMG_2516_t03, IMG_2536_t01,
+                IMG_2516_t04, IMG_2537_t01, IMG_2516_t05, IMG_2538_t01, IMG_2516_t06, IMG_2539_t01, IMG_2516_t07,
+                IMG_2542_t01, IMG_2516_t08, IMG_2544_t01, IMG_2516_t09, IMG_2516_t10]
+  heldout_twins: [IMG_2546_t01, IMG_2547_t01, IMG_2548_t01, IMG_2516_t11, IMG_2516_t12, IMG_2516_t13, IMG_2516_t14]
+  eval_every: 1000
+  eval_envs: 128
+  eval_seed: 777
