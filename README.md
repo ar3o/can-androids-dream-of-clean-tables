@@ -163,9 +163,34 @@ To test the policy fairly I held out 7 twins built from episodes it never traine
 | Fruit, 4 twins (704 fruit) | **20.2%** [17.4, 23.3] | 14.6% [12.2, 17.4] | 380 vs 551 |
 | Tools, 3 twins (320 tools) | **18.8%** [14.9, 23.4] | 10.6% [7.7, 14.5] | 516 vs 719 |
 
-The trained policy puts more objects away than NVIDIA's policy on both tasks, by about 40% for fruit and 75% for tools, and the arms bump into each other less, but the absolute numbers are still low, and watching the videos the main reason is the two arms crowding each other at the bowl and toolbox, with the grip still mostly releasing by loosening rather than opening.
+The trained policy puts more objects away than NVIDIA's policy on both tasks, by about 40% for fruit and 75% for tools, and the arms bump into each other less, but the absolute numbers are still low.
 
-I ran out of time to take the robot policy as far as I wanted before the deadline. The plan was to compare the two-arm policy against NVIDIA's lift policy, and also against a one-arm version, to see whether learning from the world model can beat the NVIDIA baseline once the arms stop getting in each other's way. For now the robot results are best read as a qualitative demonstration that the pipeline closes the loop from phone videos to a trained policy, and I will post updated scores, including the one-arm comparison, on the [project page](https://ar3o.github.io/clean-tables/) after the deadline.
+<p align="center">
+  <img src="assets/media/robot_two_arm_fruit.gif" alt="Held-out fruit twin, the first episode of the evaluation. Top: the trained two-arm policy, with both arms reaching for apples next to the bowl and crowding each other. Bottom: NVIDIA's lift policy with the greedy assignment from the same starting layout." width="100%">
+  <br><sub>Held-out fruit twin IMG_2516_t13, the first episode of the evaluation (not picked). Top: the trained two-arm policy. Bottom: NVIDIA's lift policy from the same layout. Left of each: the phone camera, right: an overview.</sub>
+</p>
+
+Watching the videos, most of the failures are the two arms going for objects next to each other and ending up stuck on each other at the bowl or the toolbox, and when an arm does get an object over the container it usually loosens its grip until the object slips rather than opening the hand.
+
+### One arm
+
+To separate the crowding from everything else, I trained a one-arm version after the deadline. It starts from the two-arm policy's weights, the second arm is moved 1.5 m back from the table, the working arm is whichever arm can reach the container in that twin, and every layout is drawn so that the working arm can reach each object and its container. The first version always used the left arm, and in 14 of the 26 twins that arm could not reach the container at all, which I only found by checking why some twins never scored anything. The baseline is NVIDIA's lift policy on the same arm with layouts drawn from the same seed (the one-arm evaluation redraws unstable spawns separately for each controller, so individual layouts can differ), and here an object counts when it is put down inside the destination the world model chose, so the numbers are not directly comparable with the two-arm table above.
+
+| Held-out twins, one arm (iteration 119, 128 episodes per twin) | Ours | NVIDIA lift policy |
+|:--|:-:|:-:|
+| Fruit, IMG_2516_t11 to t13 (2048 fruit) | **28.2%** [26.3, 30.2] | 13.5% [12.1, 15.1] |
+| Tools, 3 twins (1280 tools) | **12.4%** [10.7, 14.3] | 9.3% [7.8, 11.0] |
+
+The fourth fruit twin (IMG_2516_t14) was still being evaluated when I wrote this. Per twin, fruit is 205 vs 71 (t11), 128 vs 124 (t12) and 244 vs 82 (t13), and tools are 23 vs 16, 55 vs 59 and 81 vs 44 objects.
+
+<p align="center">
+  <img src="assets/media/robot_one_arm_fruit.gif" alt="Held-out fruit twin IMG_2516_t13. Top: the trained one-arm policy at iteration 219 carrying fruit towards the bowl. Bottom: NVIDIA's lift policy on the same arm." width="100%">
+  <br><sub>The same held-out fruit twin with one arm, the first episode of each controller (not picked), played at double speed. Top: trained policy at iteration 219. Bottom: NVIDIA's lift policy on the same arm.</sub>
+</p>
+
+With the other arm out of the way the policy puts away about twice as much fruit as the baseline, but on tools it is only a little better than the baseline, and the main thing still missing is letting go: in the videos it often brings an object to the container and then keeps holding it, or lets it slip next to it. I think there are three reasons for this. NVIDIA's policy was trained only to lift and hold, so the starting point never opens its hand, and opening the hand anywhere except right above the container loses reward, which makes holding on a safe local optimum that RL has trouble leaving. The grip output's exploration noise was also resampled every control step, so the hand flickered and never stayed open long enough to drop anything, which I changed to noise that is held for half a second. And after the deadline I found that the automatic learning-rate rule had pushed the new layers, including the grip output, down to its floor of 1e-5 after about 15 iterations and kept them there, so the part of the policy that has to learn to let go was barely training at all. That run is now continuing from iteration 199 with a fixed learning rate for the new layers. The scores on the training twins are also much higher than on the held-out ones, which means some of what it learns is specific to the layouts it trains on, and with only a few million environment steps in the one-arm runs so far it has had very little training compared with what PPO usually needs for a dexterous hand.
+
+For now the robot results are best read as a demonstration that the pipeline closes the loop from phone videos to a trained policy that beats NVIDIA's policy on held-out twins, while the absolute success rates are still low. I will post updated scores on the [project page](https://ar3o.github.io/clean-tables/).
 
 ## Limitations and what's next
 

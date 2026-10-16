@@ -85,7 +85,23 @@ Final policy: a trainable copy of NVIDIA's lift policy per arm, taught by the wo
 | IMG_2547_t01 | 21 / 128 | 13 / 128 |
 | IMG_2548_t01 | 29 / 128 | 8 / 128 |
 
-A one-arm comparison (the arm that can reach the containers works, the other is moved away, and every layout is reachable) was still training at the deadline; its results will be posted on the project page.
+### One arm (after the deadline)
+
+The same policy fine-tuned with one arm: the arm that can reach the container in each twin works, the other is moved 1.5 m back, and every layout is reachable by the working arm. Checkpoint at iteration 119 of the one-arm run; 128 episodes per twin with layouts drawn from seed 777 (unstable spawns are redrawn separately for each controller). An object counts when it is put down inside the destination the world model chose, so these numbers are not directly comparable with the two-arm table. Brackets are 95% Wilson intervals.
+
+| Twin | Ours | NVIDIA lift policy, same arm |
+|:--|:-:|:-:|
+| IMG_2516_t11 | 205 / 640 | 71 / 640 |
+| IMG_2516_t12 | 128 / 640 | 124 / 640 |
+| IMG_2516_t13 | 244 / 768 | 82 / 768 |
+| IMG_2516_t14 | still running | |
+| Fruit pooled | 28.2% [26.3, 30.2] | 13.5% [12.1, 15.1] |
+| IMG_2546_t01 | 23 / 256 | 16 / 256 |
+| IMG_2547_t01 | 55 / 512 | 59 / 512 |
+| IMG_2548_t01 | 81 / 512 | 44 / 512 |
+| Tools pooled | 12.4% [10.7, 14.3] | 9.3% [7.8, 11.0] |
+
+After iteration 199 the run continues with a fixed learning rate for the new layers (adapter and grip output); before that the KL-adaptive rule had held them at its 1e-5 floor since about iteration 15.
 
 An earlier reference run used a frozen NVIDIA policy with a scripted release and a hand-designed lift arc. It roughly doubled the frozen policy's placements on held-out twins, but those two pieces would have to be rewritten for every task, so it is not part of the pipeline.
 
