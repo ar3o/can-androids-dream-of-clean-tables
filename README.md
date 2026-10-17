@@ -178,10 +178,10 @@ To separate the crowding from everything else, I trained a one-arm version after
 
 | Held-out twins, one arm (iteration 119, 128 episodes per twin) | Ours | NVIDIA lift policy |
 |:--|:-:|:-:|
-| Fruit, IMG_2516_t11 to t13 (2048 fruit) | **28.2%** [26.3, 30.2] | 13.5% [12.1, 15.1] |
+| Fruit, 4 twins (2816 fruit) | **22.2%** [20.7, 23.8] | 11.2% [10.1, 12.4] |
 | Tools, 3 twins (1280 tools) | **12.4%** [10.7, 14.3] | 9.3% [7.8, 11.0] |
 
-The fourth fruit twin (IMG_2516_t14) was still being evaluated when I wrote this. Per twin, fruit is 205 vs 71 (t11), 128 vs 124 (t12) and 244 vs 82 (t13), and tools are 23 vs 16, 55 vs 59 and 81 vs 44 objects.
+Per twin, fruit is 205 vs 71 (t11), 128 vs 124 (t12), 244 vs 82 (t13) and 49 vs 38 (t14), and tools are 23 vs 16, 55 vs 59 and 81 vs 44 objects.
 
 <p align="center">
   <img src="assets/media/robot_one_arm_fruit.gif" alt="Held-out fruit twin IMG_2516_t13. Top: the trained one-arm policy at iteration 219 carrying fruit towards the bowl. Bottom: NVIDIA's lift policy on the same arm." width="100%">

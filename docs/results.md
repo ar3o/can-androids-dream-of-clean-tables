@@ -94,8 +94,8 @@ The same policy fine-tuned with one arm: the arm that can reach the container in
 | IMG_2516_t11 | 205 / 640 | 71 / 640 |
 | IMG_2516_t12 | 128 / 640 | 124 / 640 |
 | IMG_2516_t13 | 244 / 768 | 82 / 768 |
-| IMG_2516_t14 | still running | |
-| Fruit pooled | 28.2% [26.3, 30.2] | 13.5% [12.1, 15.1] |
+| IMG_2516_t14 | 49 / 768 | 38 / 768 |
+| Fruit pooled | 22.2% [20.7, 23.8] | 11.2% [10.1, 12.4] |
 | IMG_2546_t01 | 23 / 256 | 16 / 256 |
 | IMG_2547_t01 | 55 / 512 | 59 / 512 |
 | IMG_2548_t01 | 81 / 512 | 44 / 512 |
