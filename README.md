@@ -183,16 +183,22 @@ The thing that held this back most was letting go. NVIDIA's policy was only ever
 
 Because the hand was the bottleneck, I also tried two Franka arms with ordinary parallel grippers, which have their own NVIDIA lift policy (96.9% on its cube task, with my observation matching the task's to 2e-7). The twins, the world model's destinations and paths, the pointer and the judge stayed the same, and each Franka is mounted where the Kuka stood, moved a little to cover as much of the table as its smaller reach allows. This is a much better starting point: with the world model's destinations and a scripted gripper opening over the container, the prior alone puts away 1,181 of the 4,096 objects on the seven held-out twins (28.8%), and 72.5% of the fruit on one training twin.
 
-To have something that works for sure to show that a world model can be plugged into a robot, I also ran the simplest version of this with one Franka arm and no learning at all. The world model picks the destination and the path, the arm follows it with NVIDIA's lift policy doing the grasp, and the gripper opens when the object is over the container. On a held-out fruit twin this puts three of the five fruit in the bowl in the episode below (four at the best moment, before one bounced out), and on a held-out tools twin it gets one of two tools into the toolbox.
+To have something that works for sure to show that a world model can be plugged into a robot, I also ran the simplest version of this with one Franka arm and no learning at all. The world model picks the destination and the path, the arm follows it with NVIDIA's lift policy doing the grasp, and the gripper opens when the object is over the container. The first version kept sending the arm back to an object it had already put down, because the world model keeps naming the same object, so now an object that has been released is not picked up again, and an object the arm cannot reach for ten seconds is given up on and the arm goes on to the next one. With those two rules it puts 757 of the 1,632 objects in their container (46%) over 96 episodes on each of four held-out twins, against 571 of 2,176 (26%) for the two-arm version of the same prior with the greedy pointer, and it is ahead on every twin.
+
+<p align="center">
+  <img src="assets/results/franka_one_arm.png" alt="Bars with 95% intervals of objects in their container at the end on four held-out twins and on all four together: one arm following the world model with the give-up rules reaches 61, 51, 35 and 26% on fruit t11, fruit t14, tools 2546 and tools 2547 and 46% overall (757 of 1,632), against 39, 25, 23 and 14% and 26% overall (571 of 2,176) for two arms with the greedy pointer." width="100%">
+</p>
+
+The fruit is much easier than the tools (61% and 51% against 35% and 26%), because a flat wrench next to a toolbox is hard for a lift policy that was trained on cubes. This is a scripted controller with a scripted gripper opening, so it is a showcase of the world model's destinations and paths and not a learned result, and the comparison is not entirely even, since one arm is not slowed down by the other. The videos below show one episode on each kind of twin.
 
 <table>
 <tr>
-<td width="50%"><img src="assets/media/franka_scripted_one_arm_fruit.gif" alt="One Franka arm on a held-out fruit twin following the world model's imagined path with NVIDIA's lift policy and opening over the bowl; three of five fruit end up in the bowl." width="100%"></td>
-<td width="50%"><img src="assets/media/franka_scripted_one_arm_tools.gif" alt="One Franka arm on a held-out tools twin: the pliers go into the toolbox, the wrench is left on the table." width="100%"></td>
+<td width="50%"><img src="assets/media/franka_scripted_one_arm_fruit.gif" alt="One Franka arm on a held-out fruit twin following the world model's imagined path with NVIDIA's lift policy and opening over the bowl; four of five fruit end up in the bowl." width="100%"></td>
+<td width="50%"><img src="assets/media/franka_scripted_one_arm_tools.gif" alt="One Franka arm on a held-out tools twin following the world model's path: the pliers go into the toolbox and the wrench stays on the table." width="100%"></td>
 </tr>
 <tr>
-<td><sub>One gripper arm, no learning: the world model's path and destination, NVIDIA's policy for the grasp. Held-out fruit twin t11, one episode at double speed.</sub></td>
-<td><sub>The same on held-out tools twin 2546. The pliers go in, the wrench is never picked up.</sub></td>
+<td><sub>One gripper arm, no learning: the world model's path and destination, NVIDIA's policy for the grasp. Held-out fruit twin t11, one episode at double speed, four of five fruit in the bowl.</sub></td>
+<td><sub>The same on held-out tools twin 2546, one of two tools in the toolbox: the wrench is left on the table.</sub></td>
 </tr>
 </table>
 
