@@ -200,15 +200,15 @@ Because the hand was the bottleneck, I also tried an ordinary parallel-gripper a
 
 The table is the average over 96 episodes of 30 seconds on each of four held-out twins, which the world model and the policy never saw, counting an object as put away when the physics judge sees it resting inside its container.
 
-| Held-out twin | Following the imagined curve | Straight arc to the same container | Curve, bowl and box moved at random every episode |
-|:--|:-:|:-:|:-:|
-| Fruit, twin 11 | 293 of 480 (61%) | 338 of 480 (70%) | 261 of 480 (54%) |
-| Fruit, twin 14 | 352 of 576 (61%) | 407 of 576 (71%) | 370 of 576 (64%) |
-| Tools, twin 2546 | 111 of 192 (58%) | 104 of 192 (54%) | 120 of 192 (62%) |
-| Tools, twin 2547 | 159 of 384 (41%) | 153 of 384 (40%) | 138 of 384 (36%) |
-| All four | 915 of 1,632 (56%) | 1,002 of 1,632 (61%) | 889 of 1,632 (54%) |
+| Held-out twin | Bowl and box where they were in my video | Bowl and box moved at random every episode |
+|:--|:-:|:-:|
+| Fruit, twin 11 | 293 of 480 (61%) | 261 of 480 (54%) |
+| Fruit, twin 14 | 352 of 576 (61%) | 370 of 576 (64%) |
+| Tools, twin 2546 | 111 of 192 (58%) | 120 of 192 (62%) |
+| Tools, twin 2547 | 159 of 384 (41%) | 138 of 384 (36%) |
+| All four | 915 of 1,632 (56%) | 889 of 1,632 (54%) |
 
-The fruit is easier than the tools, since a flat wrench next to a toolbox is hard for a policy that was trained on cubes, and the gripper opening is scripted, so this is a showcase of what the world model contributes and not a learned result. Following the curve is a little worse than a straight arc on the fruit and the same on the tools, and getting it to work took one fix: the curve starts at table height, NVIDIA's policy only lifts towards a goal in the air, and with the raw curve it put away only 28% because it barely lifted, so I keep the first part of the curve at least 12 cm above the straight line. Even so, about 8% of the fruit is never grasped (mostly flat bananas) and a fifth is let go over the bowl and bounces out, which is what learning on top should be able to fix. Two arms with the same ingredients put away 29% of the objects on seven held-out twins in my first try, because they kept getting in each other's way, so the single arm is where I stopped.
+The fruit is easier than the tools, since a flat wrench next to a toolbox is hard for a policy that was trained on cubes, and the gripper opening is scripted, so this is a showcase of what the world model contributes and not a learned result. Getting the arm to follow the curve took one fix: the curve starts at table height, NVIDIA's policy only lifts towards a goal in the air, and with the raw curve it put away only 28% because it barely lifted, so I keep the first part of the curve at least 12 cm above the table-to-container line. Even so, about 8% of the fruit is never grasped (mostly flat bananas) and a fifth is let go over the bowl and bounces out, which is what learning on top should be able to fix. Two arms with the same ingredients put away 29% of the objects on seven held-out twins in my first try, because they kept getting in each other's way, so the single arm is where I stopped.
 
 **Does it only work because the bowl is always in the same place?** No. In the runs above the fruit and tools already start in a randomised layout every episode (half the time shuffled across the table, otherwise moved a little from where they were), but the bowl and the toolbox stayed where they were in my video. In the last column every container is also moved to a random place on the table at every reset (anywhere the arm can reach, turned up to 30 degrees, never overlapping anything), and nothing else changes: the world model sees where the bowl is now and draws its paths to it. It puts away 889 of 1,632 (54%), against 915 (56%) with the containers fixed, so it does not depend on the bowl or the box being where it was. The failures it adds are mostly layouts where the bowl lands right next to the arm's base, and the arm ends up pressing a banana against the rim.
 
