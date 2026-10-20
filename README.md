@@ -200,15 +200,22 @@ Because the hand was the bottleneck, I also tried an ordinary parallel-gripper a
 
 The table is the average over 96 episodes of 30 seconds on each of four held-out twins, which the world model and the policy never saw, counting an object as put away when the physics judge sees it resting inside its container.
 
-| Held-out twin | Following the imagined curve | Straight arc to the same container |
-|:--|:-:|:-:|
-| Fruit, twin 11 | 293 of 480 (61%) | 338 of 480 (70%) |
-| Fruit, twin 14 | 352 of 576 (61%) | 407 of 576 (71%) |
-| Tools, twin 2546 | 111 of 192 (58%) | 104 of 192 (54%) |
-| Tools, twin 2547 | 159 of 384 (41%) | 153 of 384 (40%) |
-| All four | 915 of 1,632 (56%) | 1,002 of 1,632 (61%) |
+| Held-out twin | Following the imagined curve | Straight arc to the same container | Curve, bowl and box moved at random every episode |
+|:--|:-:|:-:|:-:|
+| Fruit, twin 11 | 293 of 480 (61%) | 338 of 480 (70%) | 261 of 480 (54%) |
+| Fruit, twin 14 | 352 of 576 (61%) | 407 of 576 (71%) | 370 of 576 (64%) |
+| Tools, twin 2546 | 111 of 192 (58%) | 104 of 192 (54%) | 120 of 192 (62%) |
+| Tools, twin 2547 | 159 of 384 (41%) | 153 of 384 (40%) | 138 of 384 (36%) |
+| All four | 915 of 1,632 (56%) | 1,002 of 1,632 (61%) | 889 of 1,632 (54%) |
 
 The fruit is easier than the tools, since a flat wrench next to a toolbox is hard for a policy that was trained on cubes, and the gripper opening is scripted, so this is a showcase of what the world model contributes and not a learned result. Following the curve is a little worse than a straight arc on the fruit and the same on the tools, and getting it to work took one fix: the curve starts at table height, NVIDIA's policy only lifts towards a goal in the air, and with the raw curve it put away only 28% because it barely lifted, so I keep the first part of the curve at least 12 cm above the straight line. Even so, about 8% of the fruit is never grasped (mostly flat bananas) and a fifth is let go over the bowl and bounces out, which is what learning on top should be able to fix. Two arms with the same ingredients put away 29% of the objects on seven held-out twins in my first try, because they kept getting in each other's way, so the single arm is where I stopped.
+
+**Does it only work because the bowl is always in the same place?** No. In the runs above the fruit and tools already start in a randomised layout every episode (half the time shuffled across the table, otherwise moved a little from where they were), but the bowl and the toolbox stayed where they were in my video. In the last column every container is also moved to a random place on the table at every reset (anywhere the arm can reach, turned up to 30 degrees, never overlapping anything), and nothing else changes: the world model sees where the bowl is now and draws its paths to it. It puts away 889 of 1,632 (54%), against 915 (56%) with the containers fixed, so it does not depend on the bowl or the box being where it was. The failures it adds are mostly layouts where the bowl lands right next to the arm's base, and the arm ends up pressing a banana against the rim.
+
+<p align="center">
+  <img src="assets/media/dr_layouts.gif" alt="Four episodes in a 2x2 grid, each with the bowl or the toolbox in a different random place: two fruit tables where the arm carries the fruit to the bowl along the world model's dotted path, and two tools tables where the tools are carried into the toolbox." width="100%">
+  <br><sub>Four episodes with the bowl and the toolbox in random places, in real time and cut at 16 seconds. Top: fruit (these put away 5 and 4 of 5; I recorded six fruit episodes this way, which put away 5, 0, 4, 0, 2 and 1). Bottom: tools (2 of 2 in both; the four I recorded put away 1, 1, 2 and 2). The counter on the tools clips shows one fewer, because the clip stops the moment the last tool is judged to be at rest.</sub>
+</p>
 
 ## 6. From the trained policy to a vision-language-action model
 
