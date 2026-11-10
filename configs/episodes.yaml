@@ -1,0 +1,5 @@
+# Episode segmentation (cleantables.episodes.segment).
+segment:
+  model: gemini-2.5-flash        # any current Gemini Flash model
+  sample_fps: 5                  # frames per second the model sees
+  poll_s: 5                      # wait between checks while an uploaded video is being processed
