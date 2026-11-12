@@ -176,16 +176,6 @@ To see the plans on real grasps, I put two Franka arms on my twins with NVIDIA's
   <br><sub>Two arms with NVIDIA's lift policy on a held-out fruit twin, following the world model's paths (the dotted arrows).</sub>
 </p>
 
-## What it produces and what's next
-
-The output is a robot policy that takes human videos and an instruction like "Put the fruit in the bowl" and works on new tables and new layouts. The same machinery is also the data engine for the next steps: the trained robot can record demonstrations for training a VLA, the world model is a backbone that can be pretrained on far more human video, and every task it learns becomes part of a demo library.
-
-<p align="center">
-  <img src="assets/figures/next_steps.png" alt="Now and next: random placement becomes LLM-built scenes; simulator render becomes Cosmos Transfer; object positions become the robot reading cameras; distance to goal spots becomes matching V-JEPA future prediction." width="80%">
-</p>
-
-The next things I want to do are building whole scenes with an LLM instead of random placement, making the renders photoreal with Cosmos Transfer, letting the robot read its own cameras instead of object positions, and scoring progress by matching the world model's V-JEPA future prediction, which would let the same reward work for tasks that aren't about where objects end up. I will keep posting progress on the [project page](https://ar3o.github.io/clean-tables/).
-
 ## Running it
 
 Setup and the data layout are in [docs/setup.md](docs/setup.md). Each stage is one script, run in order:
