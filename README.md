@@ -116,6 +116,13 @@ To evaluate it I hold out whole episodes and read the goals from the first frame
 
 The world model puts the goal within about the size of a piece of fruit of where I really put it, from a single frame of a scene it has never seen, and it is a third more accurate than a regression model trained on exactly the same data. Played back inside the episode's own twin, its plans end 7.2 cm from my real end positions.
 
+The video is what tells it the task. In a closed-loop test on a held-out episode, the world model watches the table, decides what to move and imagines the carry, and each plan is carried out in physics before it looks again. With the V-JEPA 2 video it puts all five fruit in the bowl; switched to its 3D-only mode, without the video, it decides nothing needs to move. In an environment that looks nothing like my kitchen it still starts on the fruit with the video and does nothing without it, which is what the fine-tuning in the next section is for.
+
+<p align="center">
+  <img src="assets/figures/vjepa_closed_loop.png" alt="Closed-loop test on one held-out episode. Fruit put in the bowl: 5 of 5 with V-JEPA 2 video and 0 without in the episode's own twin; 1 and 0 in a new environment. Distance from the real end state: 7.2 cm with video and 32.2 cm without in the twin; 22.3 cm and 32.2 cm in a new environment." width="90%">
+  <br><sub>The same world model with and without its V-JEPA 2 video input, planning a held-out episode in closed loop. Without the video it predicts that nothing moves, which leaves every object 32.2 cm from where I really put it.</sub>
+</p>
+
 ## 5. Fine-tuning the world model for new worlds
 
 My videos are all from one kitchen, so the next step was to teach the world model what stays the same when everything else changes. I fine-tuned it on 10 episodes rendered in 12 randomised worlds each, 2,100 frames, and tested it on worlds that look like nothing it has trained on.
